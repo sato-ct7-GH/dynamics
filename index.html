@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>力と運動の法則の基本知識</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{
+      font-family:'Helvetica Neue',Arial,'Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif;
+      background:#edf2f7;color:#1a202c;min-height:100vh;
+    }
+
+    /* ===== ヘッダー ===== */
+    header{
+      background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 100%);
+      color:#fff;padding:14px 18px 12px;text-align:center;
+      box-shadow:0 2px 8px rgba(0,0,0,.25);
+    }
+    .hdr-school{font-size:11px;opacity:.75;margin-bottom:4px;letter-spacing:.5px;}
+    .hdr-title{font-size:19px;font-weight:700;letter-spacing:.5px;}
+    .hdr-sub{font-size:12px;opacity:.8;margin-top:4px;min-height:1em;}
+
+    /* ===== セクションタブ ===== */
+    .tabs{
+      background:#1e3a8a;
+    }
+    .tabs-inner{
+      display:flex;max-width:600px;margin:0 auto;
+      overflow-x:auto;-webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+    }
+    .tabs-inner::-webkit-scrollbar{display:none;}
+    .tab{
+      flex:1 1 0;min-width:0;padding:10px 5px;text-align:center;
+      font-size:11.5px;line-height:1.3;font-weight:600;color:rgba(255,255,255,.5);
+      cursor:pointer;border-bottom:3px solid transparent;
+      transition:all .2s;user-select:none;
+      white-space:normal;word-break:break-all;
+      display:flex;align-items:center;justify-content:center;
+    }
+    @media (max-width:360px){ .tab{font-size:9px;padding:6px 2px 5px;} }
+    .tab.active{color:#fbbf24;border-bottom-color:#fbbf24;}
+    .tab.disabled{opacity:.3;cursor:not-allowed;}
+
+    /* ===== メイン ===== */
+    .main{max-width:600px;margin:0 auto;padding:14px 13px 70px;}
+
+    /* ===== モード切替 ===== */
+    .mode-row{
+      display:flex;background:#fff;border-radius:10px;
+      overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.1);margin-bottom:14px;
+    }
+    .mode-btn{
+      flex:1;padding:11px 6px;border:none;background:#fff;
+      color:#6b7280;font-size:12.5px;font-weight:500;
+      cursor:pointer;font-family:inherit;transition:all .2s;
+    }
+    .mode-btn.active{background:#2563eb;color:#fff;}
+
+    /* ===== 進捗・スコア ===== */
+    .prog-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+    .prog-bar{flex:1;height:5px;background:#cbd5e1;border-radius:3px;}
+    .prog-fill{height:100%;background:#2563eb;border-radius:3px;transition:width .35s ease;}
+    .prog-text{font-size:12px;color:#64748b;white-space:nowrap;}
+    .score-row{text-align:right;font-size:13px;color:#64748b;margin-bottom:12px;}
+
+    .q-card{
+      background:#fff;border-radius:12px;padding:18px 20px;
+      margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.09);
+      border-left:4px solid #2563eb;
+    }
+    .q-num{font-size:11px;font-weight:700;color:#2563eb;margin-bottom:7px;letter-spacing:.5px;}
+    .q-img{display:block;max-width:100%;width:340px;height:auto;border-radius:8px;margin-bottom:12px;border:1px solid #e2e8f0;background:#fff;}
+    .q-img.half{width:170px;}
+    .q-img.wide{width:100%;}
+    .q-imgs{display:flex;gap:10px;align-items:flex-start;margin-bottom:12px;}
+    .q-imgs .q-img{margin-bottom:0;flex:0 1 auto;min-width:0;max-width:calc(50% - 5px);}
+    .q-text{font-size:15px;line-height:1.75;}
+
+    .choices{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+    .choice-btn{
+      width:100%;padding:12px 16px;background:#fff;
+      border:2px solid #e2e8f0;border-radius:8px;cursor:pointer;
+      font-size:14px;text-align:left;color:#374151;
+      transition:all .15s;font-family:inherit;line-height:1.6;
+    }
+    .choice-btn:hover:not(:disabled){border-color:#93c5fd;background:#eff6ff;}
+    .choice-btn.correct{border-color:#34d399;background:#ecfdf5;color:#065f46;font-weight:600;}
+    .choice-btn.wrong{border-color:#f87171;background:#fef2f2;color:#991b1b;}
+    .choice-btn:disabled{cursor:default;}
+
+    .feedback{
+      padding:12px 16px;border-radius:8px;font-size:13px;
+      line-height:1.65;display:none;margin-bottom:12px;
+    }
+    .feedback.ok{display:block;background:#ecfdf5;border:1px solid #6ee7b7;color:#065f46;}
+    .feedback.ng{display:block;background:#fef2f2;border:1px solid #fca5a5;color:#991b1b;}
+    .fb-expl{display:inline-block;margin-top:6px;font-weight:400;color:#78350f;}
+
+    .next-btn{
+      width:100%;padding:13px;background:#2563eb;color:#fff;
+      border:none;border-radius:8px;font-size:15px;font-weight:600;
+      cursor:pointer;font-family:inherit;transition:background .2s;
+    }
+    .next-btn:hover{background:#1e3a8a;}
+
+    /* ===== 初学モード：解答・解説 ===== */
+    .intro-answer{
+      background:#ecfdf5;border:1px solid #6ee7b7;border-radius:10px;
+      padding:14px 18px;margin-bottom:14px;
+    }
+    .intro-answer-label{font-size:11px;font-weight:700;color:#059669;letter-spacing:.5px;margin-bottom:6px;}
+    .intro-answer-text{font-size:16px;font-weight:700;color:#065f46;margin-bottom:10px;line-height:1.6;}
+    .intro-expl{font-size:13.5px;line-height:1.75;color:#374151;border-top:1px dashed #a7f3d0;padding-top:10px;}
+    .intro-expl-icon{margin-right:4px;}
+
+    /* ===== 結果画面 ===== */
+    .result-card{
+      background:#fff;border-radius:16px;padding:40px 24px;
+      text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.1);
+    }
+    .result-emoji{font-size:56px;margin-bottom:14px;}
+    .result-score{font-size:56px;font-weight:800;color:#2563eb;line-height:1;}
+    .result-total{font-size:17px;color:#64748b;margin-bottom:6px;}
+    .result-pct{font-size:28px;font-weight:700;color:#374151;margin-bottom:28px;}
+    .retry-btn{
+      padding:12px 36px;background:#2563eb;color:#fff;border:none;
+      border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;
+    }
+    .retry-btn:hover{background:#1e3a8a;}
+    .result-actions{display:flex;flex-direction:column;gap:10px;}
+
+    /* ===== 送信モード ===== */
+    .name-card{
+      background:#fff;border-radius:12px;padding:16px 20px;
+      margin-bottom:13px;box-shadow:0 1px 4px rgba(0,0,0,.08);
+    }
+    .name-label{font-size:13px;font-weight:600;color:#374151;margin-bottom:8px;display:block;}
+    .name-input{
+      width:100%;padding:10px 14px;border:2px solid #e2e8f0;
+      border-radius:8px;font-size:15px;font-family:inherit;
+      outline:none;color:#1a202c;transition:border-color .2s;
+    }
+    .name-input:focus{border-color:#2563eb;}
+
+    .sub-result{
+      padding:16px;border-radius:10px;text-align:center;
+      margin-bottom:16px;font-size:14px;line-height:1.8;
+    }
+    .sub-result.ok{background:#ecfdf5;border:1px solid #6ee7b7;color:#065f46;}
+    .sub-result.warn{background:#fffbeb;border:1px solid #fcd34d;color:#92400e;}
+
+    .sm-explanation{
+      display:flex;gap:10px;align-items:flex-start;
+      background:#fffbeb;border:1px solid #fcd34d;
+      border-radius:8px;padding:12px 14px;
+      font-size:13px;line-height:1.7;color:#78350f;
+      margin-bottom:12px;
+    }
+    .sm-expl-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+    .sm-final-card{
+      background:#fff;border-radius:16px;padding:36px 24px;
+      text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.1);
+    }
+    .sm-final-icon{font-size:52px;margin-bottom:12px;}
+    .sm-final-title{font-size:17px;font-weight:700;color:#1a202c;margin-bottom:6px;}
+    .sm-final-name{font-size:15px;color:#2563eb;font-weight:600;margin-bottom:20px;}
+    .sm-start-btn{
+      width:100%;padding:13px;background:#2563eb;color:#fff;border:none;
+      border-radius:8px;font-size:15px;font-weight:600;
+      cursor:pointer;font-family:inherit;margin-bottom:0;
+      transition:background .2s;
+    }
+    .sm-start-btn:hover{background:#1e3a8a;}
+    .submit-btn{
+      width:100%;padding:14px;background:#059669;color:#fff;border:none;
+      border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;
+      font-family:inherit;margin-bottom:14px;transition:background .2s;
+    }
+    .submit-btn:hover{background:#047857;}
+    .submit-btn:disabled{background:#9ca3af;cursor:not-allowed;}
+
+    /* ===== 完了カード（初学モード） ===== */
+    .done-card{
+      background:#fff;border-radius:16px;padding:40px 24px;
+      text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.1);
+    }
+    .done-icon{font-size:52px;margin-bottom:14px;}
+    .done-title{font-size:18px;font-weight:700;color:#1a202c;margin-bottom:6px;}
+    .done-sub{font-size:13px;color:#64748b;margin-bottom:24px;}
+    .done-actions{display:flex;flex-direction:column;gap:10px;}
+
+    /* ===== 準備中 ===== */
+    .coming-card{
+      background:#fff;border-radius:16px;padding:50px 24px;
+      text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.08);color:#6b7280;
+    }
+    .coming-icon{font-size:48px;margin-bottom:14px;}
+    .coming-title{font-size:18px;font-weight:600;color:#374151;margin-bottom:8px;}
+    .coming-text{font-size:14px;}
+
+    /* ===== 学習順/ランダム切替 ===== */
+    .order-row{
+      display:flex;align-items:center;gap:6px;margin-bottom:10px;
+    }
+    .order-label{font-size:12px;color:#64748b;margin-right:2px;white-space:nowrap;}
+    .order-btn{
+      padding:5px 14px;border-radius:20px;border:1.5px solid #cbd5e1;
+      background:#fff;color:#64748b;font-size:12px;font-weight:600;
+      cursor:pointer;font-family:inherit;transition:all .2s;
+    }
+    .order-btn.active{background:#2563eb;border-color:#2563eb;color:#fff;}
+    .order-btn:hover:not(.active){background:#f1f5f9;border-color:#93c5fd;}
+
+    /* KaTeX調整 */
+    .katex{font-size:1em;}
+    .katex-display{margin:.3em 0;}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-school">神奈川県立湘南高等学校　物理</div>
+  <div class="hdr-title">⚙️ 力と運動の法則の基本知識</div>
+  <div class="hdr-sub" id="hdrSub"></div>
+</header>
+
+<div class="tabs"><div class="tabs-inner" id="tabs"></div></div>
+
+<div class="main">
+  <div class="mode-row">
+    <button class="mode-btn" id="modeIntro"  onclick="setMode('intro')">🔰 初学モード</button>
+    <button class="mode-btn" id="modeStudy"  onclick="setMode('study')">📖 自習モード</button>
+    <button class="mode-btn" id="modeSubmit" onclick="setMode('submit')">📤 送信モード</button>
+  </div>
+  <div id="content"></div>
+</div>
+
+<script>
+// ============================================================
+// データ定義
+// choices[0] が常に正解。自習・送信モードでは表示時にシャッフルする。
+// ============================================================
+const SECTIONS = [
+  {
+    id: 1,
+    label: "運動の3法則と摩擦力",
+    subtitle: "力の表し方・つりあい・摩擦",
+    available: true,
+    questions: [
+      { id: 1, text: "力の主な量記号は何か。",
+        choices: ["\\(F\\)", "\\(N\\)", "\\(W\\)", "\\(P\\)"] },
+      { id: 2, text: "重力の大きさを表す式は何か。",
+        choices: ["\\(mg\\)", "\\(N\\)", "\\(T\\)", "\\(mv\\)"] },
+      { id: 3, text: "垂直抗力の記号は何か。",
+        choices: ["\\(N\\)", "\\(F\\)", "\\(T\\)", "\\(W\\)"] },
+      { id: 4, text: "摩擦力の記号は何か。",
+        choices: ["\\(F\\)（\\(f\\)）", "\\(N\\)", "\\(T\\)", "\\(W\\)"] },
+      { id: 5, text: "張力の記号は何か。",
+        choices: ["\\(T\\)、\\(S\\)", "\\(N\\)", "\\(F\\)", "\\(mg\\)"] },
+      { id: 6, text: "力の主な単位は何か。",
+        choices: ["\\(\\mathrm{N}\\)", "\\(\\mathrm{J}\\)", "\\(\\mathrm{W}\\)", "\\(\\mathrm{Pa}\\)"] },
+      { id: 7, text: "仕事の記号は何か。",
+        choices: ["\\(W\\)", "\\(F\\)", "\\(P\\)", "\\(J\\)"] },
+      { id: 8, text: "仕事の主な単位は何か。",
+        choices: ["\\(\\mathrm{J}\\)", "\\(\\mathrm{N}\\)", "\\(\\mathrm{W}\\)", "\\(\\mathrm{Pa}\\)"] },
+      { id: 9, text: "仕事率の記号は何か。",
+        choices: ["\\(P\\)", "\\(W\\)", "\\(J\\)", "\\(F\\)"] },
+      { id: 10, text: "仕事率の主な単位は何か。",
+        choices: ["\\(\\mathrm{W}\\)", "\\(\\mathrm{J}\\)", "\\(\\mathrm{N}\\)", "\\(\\mathrm{Pa}\\)"] },
+      { id: 11, text: "力が一定であるとき、仕事を求める式はどれか。",
+        choices: ["仕事 ＝ 力 × 距離", "仕事 ＝ 力 ÷ 距離", "仕事 ＝ 力 × 時間", "仕事 ＝ 力 ÷ 時間"] },
+      { id: 12, text: "仕事率を求める式はどれか。",
+        choices: ["仕事率 ＝ 仕事 ÷ 時間", "仕事率 ＝ 仕事 × 時間", "仕事率 ＝ 仕事 ÷ 距離", "仕事率 ＝ 仕事 × 距離"] },
+      { id: 13, text: "力の3要素とはどれか。",
+        choices: ["大きさ・向き・作用点", "大きさ・向き・距離", "大きさ・時間・作用点", "大きさ・時間・距離"] },
+      { id: 14, text: "フックの法則について、ばねが加える力を \\(F\\)、ばね定数を \\(k\\)、自然長からの伸び・縮みを \\(x\\) とするとき、正しい式はどれか。",
+        choices: ["\\(F = kx\\)", "\\(F = 2kx\\)", "\\(F = kx^2\\)", "\\(F = \\dfrac{1}{2}kx\\)"] },
+      { id: 15, text: "ばね定数の単位はどれか。",
+        choices: ["\\(\\mathrm{N/m}\\)", "\\(\\mathrm{N{\\cdot}m}\\)", "\\(\\mathrm{N}\\)", "\\(\\mathrm{N{\\cdot}m^2}\\)"] },
+      { id: 16, text: "重さとは何か。",
+        choices: ["重力の大きさ", "質量の大きさ", "密度の大きさ", "地球上での質量"] },
+      { id: 17, text: "物体が静止しているときに立てる式はどれか。",
+        choices: ["力のつりあいの式", "運動方程式", "状態方程式", "フックの法則"] },
+      { id: 18, text: "物体が加速度運動しているときに立てる式はどれか。",
+        choices: ["運動方程式", "力のつりあいの式", "状態方程式", "フックの法則"] },
+      { id: 19, text: "粗い斜面の傾きを大きくしていくと、ある角度 \\(\\theta_0\\) で物体が滑り出した。この角度を何というか。",
+        choices: ["摩擦角", "滑り角", "限界角", "ゼロ角"] },
+      { id: 20, text: "粗い斜面の静止摩擦係数を \\(\\mu\\)、物体が滑り出す角度を \\(\\theta_0\\) とするとき、両者の関係はどれか。",
+        choices: ["\\(\\mu = \\tan\\theta_0\\)", "\\(\\mu = \\dfrac{1}{\\tan\\theta_0}\\)", "\\(\\mu = 2\\tan\\theta_0\\)", "\\(\\mu = \\dfrac{1}{2}\\tan\\theta_0\\)"] },
+      { id: 21, text: "静止摩擦力・最大静止摩擦力・動摩擦力のうち、\\(F=\\mu N\\) の式が使えないのはどれか。",
+        choices: ["静止摩擦力", "最大静止摩擦力", "動摩擦力"] },
+      { id: 22, text: "静止摩擦係数を \\(\\mu\\)、垂直抗力を \\(N\\) とするとき、最大静止摩擦力 \\(F\\) を表す式はどれか。",
+        choices: ["\\(F = \\mu N\\)", "\\(F = \\dfrac{N}{\\mu}\\)", "\\(F = 2\\mu N\\)", "\\(F = \\dfrac{\\mu}{N}\\)"] },
+      { id: 23, text: "動摩擦係数を \\(\\mu'\\)、垂直抗力を \\(N\\) とするとき、動摩擦力 \\(f\\) を表す式はどれか。",
+        choices: ["\\(f = \\mu' N\\)", "\\(f = \\dfrac{N}{\\mu'}\\)", "\\(f = 2\\mu' N\\)", "\\(f = \\mu' N^2\\)"] },
+      { id: 24, text: "静止摩擦係数 \\(\\mu\\) と動摩擦係数 \\(\\mu'\\) の大小関係はどれか。",
+        choices: ["\\(\\mu' &lt; \\mu\\)", "\\(\\mu' > \\mu\\)", "\\(\\mu' = \\mu\\)"] },
+      { id: 25, text: "摩擦係数の単位はどれか。",
+        choices: ["単位なし（無次元）", "\\(\\mathrm{N}\\)", "\\(\\mathrm{1/N}\\)", "\\(\\mathrm{N^2}\\)"] },
+      { id: 26, text: "仕事の大きさを表すのは、どのグラフのどこか。",
+        choices: ["\\(F\\)–\\(x\\) グラフの面積", "\\(F\\)–\\(x\\) グラフの傾き", "\\(F\\)–\\(t\\) グラフの傾き", "\\(F\\)–\\(t\\) グラフの面積"] }
+    ]
+  },
+  {
+    id: 2,
+    label: "2体の運動",
+    subtitle: "アトウッドの器械と連結物体",
+    available: true,
+    questions: [
+      { id: 27, text: "（アトウッドの器械）質量 \\(m\\) の物体1と質量 \\(M\\ (>m)\\) の物体2が、定滑車を通る軽い糸でつるされている。手をはなすと、それぞれ大きさ \\(a\\) の加速度で運動した。糸の張力の大きさを \\(T\\)、重力加速度の大きさを \\(g\\) とする。上向きを正とすると、物体1の運動方程式はどれか。",
+        choices: ["\\(T - mg = ma\\)", "\\(mg - T = ma\\)", "\\(T + mg = ma\\)", "\\(T - mg = Ma\\)"] },
+      { id: 28, text: "（アトウッドの器械）質量 \\(m\\) の物体1と質量 \\(M\\ (>m)\\) の物体2が、定滑車を通る軽い糸でつるされている。手をはなすと、それぞれ大きさ \\(a\\) の加速度で運動した。糸の張力の大きさを \\(T\\)、重力加速度の大きさを \\(g\\) とする。下向きを正とすると、物体2の運動方程式はどれか。",
+        choices: ["\\(Mg - T = Ma\\)", "\\(T - Mg = Ma\\)", "\\(Mg + T = Ma\\)", "\\(Mg - T = ma\\)"] },
+      { id: 29, text: "（アトウッドの器械）質量 \\(m\\) の物体1と質量 \\(M\\ (>m)\\) の物体2が、定滑車を通る軽い糸でつるされている。手をはなすと、それぞれ大きさ \\(a\\) の加速度で運動した。糸の張力の大きさを \\(T\\)、重力加速度の大きさを \\(g\\) とする。2式 \\(T-mg=ma\\)、\\(Mg-T=Ma\\) から \\(T\\) を消去したとき、加速度 \\(a\\) はどれか。",
+        choices: ["\\(a = \\dfrac{M-m}{M+m}\\,g\\)", "\\(a = \\dfrac{M+m}{M-m}\\,g\\)", "\\(a = \\dfrac{M-m}{M}\\,g\\)", "\\(a = \\dfrac{m}{M+m}\\,g\\)"] },
+      { id: 30, text: "（アトウッドの器械）質量 \\(m\\) の物体1と質量 \\(M\\ (>m)\\) の物体2が、定滑車を通る軽い糸でつるされている。手をはなすと、それぞれ大きさ \\(a\\) の加速度で運動した。糸の張力の大きさを \\(T\\)、重力加速度の大きさを \\(g\\) とする。2式から \\(a\\) を消去したとき、張力 \\(T\\) はどれか。",
+        choices: ["\\(T = \\dfrac{2Mm}{M+m}\\,g\\)", "\\(T = \\dfrac{Mm}{M+m}\\,g\\)", "\\(T = \\dfrac{M+m}{2Mm}\\,g\\)", "\\(T = (M+m)g\\)"] },
+      { id: 31, text: "なめらかな水平面上の質量 \\(m\\) の物体1と、質量 \\(M\\ (>m)\\) の物体2が、定滑車を通る軽い糸でつながれている。手をはなすと、物体1は水平方向に、物体2は鉛直下向きに、大きさ \\(a\\) の加速度で運動した。糸の張力の大きさを \\(T\\)、重力加速度の大きさを \\(g\\) とする。物体1の水平方向の運動方程式はどれか。",
+        choices: ["\\(T = ma\\)", "\\(T - mg = ma\\)", "\\(mg - T = ma\\)", "\\(T - N = ma\\)"] },
+      { id: 32, text: "なめらかな水平面上の質量 \\(m\\) の物体1と、質量 \\(M\\ (>m)\\) の物体2が、定滑車を通る軽い糸でつながれている。手をはなすと、物体1は水平方向に、物体2は鉛直下向きに、大きさ \\(a\\) の加速度で運動した。糸の張力の大きさを \\(T\\)、重力加速度の大きさを \\(g\\) とする。物体2の鉛直方向の運動方程式はどれか。",
+        choices: ["\\(Mg - T = Ma\\)", "\\(T - Mg = Ma\\)", "\\(Mg + T = Ma\\)", "\\(Mg - T = ma\\)"] },
+      { id: 33, text: "なめらかな水平面上の質量 \\(m\\) の物体1と、質量 \\(M\\ (>m)\\) の物体2が、定滑車を通る軽い糸でつながれている。手をはなすと、物体1は水平方向に、物体2は鉛直下向きに、大きさ \\(a\\) の加速度で運動した。糸の張力の大きさを \\(T\\)、重力加速度の大きさを \\(g\\) とする。2式 \\(T=ma\\)、\\(Mg-T=Ma\\) から \\(T\\) を消去したとき、加速度 \\(a\\) はどれか。",
+        choices: ["\\(a = \\dfrac{M}{M+m}\\,g\\)", "\\(a = \\dfrac{m}{M+m}\\,g\\)", "\\(a = \\dfrac{M-m}{M+m}\\,g\\)", "\\(a = \\dfrac{M}{m}\\,g\\)"] },
+      { id: 34, text: "なめらかな水平面上の質量 \\(m\\) の物体1と、質量 \\(M\\ (>m)\\) の物体2が、定滑車を通る軽い糸でつながれている。手をはなすと、物体1は水平方向に、物体2は鉛直下向きに、大きさ \\(a\\) の加速度で運動した。糸の張力の大きさを \\(T\\)、重力加速度の大きさを \\(g\\) とする。2式から \\(a\\) を消去したとき、張力 \\(T\\) はどれか。",
+        choices: ["\\(T = \\dfrac{Mm}{M+m}\\,g\\)", "\\(T = \\dfrac{2Mm}{M+m}\\,g\\)", "\\(T = \\dfrac{M+m}{Mm}\\,g\\)", "\\(T = Mg\\)"] },
+      { id: 35, text: "動摩擦係数 \\(\\mu'\\) の粗い水平面上の質量 \\(m\\) の物体1と、質量 \\(M\\ (>m)\\) の物体2が、定滑車を通る軽い糸でつながれている。手をはなすと、物体1は水平方向に、物体2は鉛直下向きに、大きさ \\(a\\) の加速度で運動した。糸の張力の大きさを \\(T\\)、重力加速度の大きさを \\(g\\) とする。物体1にはたらく垂直抗力 \\(N\\) と動摩擦力 \\(f\\) はどれか。",
+        choices: ["\\(N = mg\\)、\\(f = \\mu' mg\\)", "\\(N = Mg\\)、\\(f = \\mu' Mg\\)", "\\(N = mg\\)、\\(f = \\mu' N^2\\)", "\\(N = (M+m)g\\)、\\(f = \\mu'(M+m)g\\)"] },
+      { id: 36, text: "動摩擦係数 \\(\\mu'\\) の粗い水平面上の質量 \\(m\\) の物体1と、質量 \\(M\\ (>m)\\) の物体2が、定滑車を通る軽い糸でつながれている。手をはなすと、物体1は水平方向に、物体2は鉛直下向きに、大きさ \\(a\\) の加速度で運動した。糸の張力の大きさを \\(T\\)、重力加速度の大きさを \\(g\\) とする。物体1の水平方向の運動方程式はどれか。",
+        choices: ["\\(T - \\mu' mg = ma\\)", "\\(T + \\mu' mg = ma\\)", "\\(\\mu' mg - T = ma\\)", "\\(T - \\mu' Mg = ma\\)"] },
+      { id: 37, text: "動摩擦係数 \\(\\mu'\\) の粗い水平面上の質量 \\(m\\) の物体1と、質量 \\(M\\ (>m)\\) の物体2が、定滑車を通る軽い糸でつながれている。手をはなすと、物体1は水平方向に、物体2は鉛直下向きに、大きさ \\(a\\) の加速度で運動した。糸の張力の大きさを \\(T\\)、重力加速度の大きさを \\(g\\) とする。物体2の鉛直方向の運動方程式はどれか。",
+        choices: ["\\(Mg - T = Ma\\)", "\\(T - Mg = Ma\\)", "\\(Mg + T = Ma\\)", "\\(Mg - T = ma\\)"] },
+      { id: 38, text: "動摩擦係数 \\(\\mu'\\) の粗い水平面上の質量 \\(m\\) の物体1と、質量 \\(M\\ (>m)\\) の物体2が、定滑車を通る軽い糸でつながれている。手をはなすと、物体1は水平方向に、物体2は鉛直下向きに、大きさ \\(a\\) の加速度で運動した。糸の張力の大きさを \\(T\\)、重力加速度の大きさを \\(g\\) とする。2式 \\(T-\\mu' mg=ma\\)、\\(Mg-T=Ma\\) から \\(T\\) を消去したとき、加速度 \\(a\\) はどれか。",
+        choices: ["\\(a = \\dfrac{M-\\mu' m}{M+m}\\,g\\)", "\\(a = \\dfrac{M+\\mu' m}{M+m}\\,g\\)", "\\(a = \\dfrac{M-m}{M+m}\\,g\\)", "\\(a = \\dfrac{M}{M+m}\\,g\\)"] },
+      { id: 39, text: "動摩擦係数 \\(\\mu'\\) の粗い水平面上の質量 \\(m\\) の物体1と、質量 \\(M\\ (>m)\\) の物体2が、定滑車を通る軽い糸でつながれている。手をはなすと、物体1は水平方向に、物体2は鉛直下向きに、大きさ \\(a\\) の加速度で運動した。糸の張力の大きさを \\(T\\)、重力加速度の大きさを \\(g\\) とする。2式から \\(a\\) を消去したとき、張力 \\(T\\) はどれか。",
+        choices: ["\\(T = \\dfrac{(1+\\mu')Mm}{M+m}\\,g\\)", "\\(T = \\dfrac{(1-\\mu')Mm}{M+m}\\,g\\)", "\\(T = \\dfrac{\\mu' Mm}{M+m}\\,g\\)", "\\(T = \\dfrac{(1+\\mu')M}{M+m}\\,g\\)"] }
+    ]
+  },
+  {
+    id: 3,
+    label: "圧力と浮力",
+    subtitle: "水圧・浮力・空気抵抗",
+    available: true,
+    questions: [
+      { id: 40, text: "圧力の量記号は何か。",
+        choices: ["\\(P\\)", "\\(F\\)", "\\(S\\)", "\\(\\rho\\)"] },
+      { id: 41, text: "圧力の主な単位はどれか。",
+        choices: ["\\(\\mathrm{Pa}\\)", "\\(\\mathrm{N/m}\\)", "\\(\\mathrm{N{\\cdot}m^2}\\)", "\\(\\mathrm{N}\\)"] },
+      { id: 42, text: "天気予報で使う気圧の単位 \\(\\mathrm{hPa}\\) は、\\(\\mathrm{Pa}\\) の何倍か。",
+        choices: ["100倍", "10倍", "1000倍", "100分の1倍"] },
+      { id: 43, text: "圧力の定義はどれか。",
+        choices: ["単位面積あたりに加わる力", "単位長さあたりに加わる力", "単位体積あたりに加わる力", "単位時間あたりに加わる力"] },
+      { id: 44, text: "圧力の定義式はどれか。圧力を \\(P\\)、力を \\(F\\)、面積を \\(S\\) とする。",
+        choices: ["\\(P = \\dfrac{F}{S}\\)", "\\(P = FS\\)", "\\(P = \\dfrac{S}{F}\\)", "\\(P = 2FS\\)"] },
+      { id: 45, text: "密度の量記号（小文字ギリシャ文字）はどれか。",
+        choices: ["\\(\\rho\\)（ロー）", "\\(\\mu\\)（ミュー）", "\\(\\sigma\\)（シグマ）", "\\(\\theta\\)（シータ）"] },
+      { id: 46, text: "密度 \\(\\rho\\) の液体中、深さ \\(h\\) での圧力の公式はどれか。重力加速度を \\(g\\) とする。",
+        choices: ["\\(P = \\rho h g\\)", "\\(P = \\rho h\\)", "\\(P = \\dfrac{\\rho h}{g}\\)", "\\(P = \\dfrac{hg}{\\rho}\\)"] },
+      { id: 47, text: "密度 \\(\\rho\\) の液体中にある体積 \\(V\\) の物体にはたらく浮力 \\(F\\) はどれか。重力加速度を \\(g\\) とする。",
+        choices: ["\\(F = \\rho V g\\)", "\\(F = \\rho V\\)", "\\(F = \\rho g\\)", "\\(F = \\dfrac{\\rho g}{V}\\)"] },
+      { id: 48, text: "物体にはたらく浮力は、物体が押しのけた流体の重さに等しい。これを何の原理というか。",
+        choices: ["アルキメデスの原理", "パスカルの原理", "仕事の原理", "デカルトの原理"] },
+      { id: 49, text: "体積が同じ鉄球とプラスチックボールにはたらく、水中での浮力の大きさはどうなるか。",
+        choices: ["変わらない", "鉄球が大きい", "プラスチックボールが大きい"] },
+      { id: 50, text: "「人がプールで水中にもぐっていると、その人に大気圧はかからない。」この文は正しいか。",
+        choices: ["誤", "正"] },
+      { id: 51, text: "トリチェリの実験によると、大気圧の大きさは高さ何 mm の水銀柱の圧力に等しいか。",
+        choices: ["760 mm", "76 mm", "7.6 mm", "980 mm"] },
+      { id: 52, text: "アルキメデスの原理「物体にはたらく浮力は、物体が押しのけた ［　　　］ に等しい」。空欄に入る語はどれか。",
+        choices: ["流体の重さ", "流体の質量", "流体の体積", "物体の重さ"] },
+      { id: 53, text: "上空 1000 m の雨雲から落ちる雨粒の速さが、自由落下として計算した値（約 140 m/s）よりずっと小さくなるのはなぜか。",
+        choices: ["空気抵抗がはたらくから", "重力が高所では弱いから", "浮力が重力とつりあうから", "雨粒の質量が小さいから"] },
+      { id: 54, text: "空気抵抗が速さ \\(v\\) に比例するとき、質量 \\(m\\) の物体が鉛直下向きに速さ \\(v\\) で落下する場合の運動方程式はどれか。加速度の大きさを \\(a\\)、重力加速度を \\(g\\)、比例定数を \\(k\\) とする。",
+        choices: ["\\(ma = mg - kv\\)", "\\(ma = mg + kv\\)", "\\(ma = kv - mg\\)", "\\(ma = mg - kv^2\\)"] }
+    ]
+  }
+];
+
+// ============================================================
+// 各問題の解説文
+// ============================================================
+const EXPLANATIONS = {
+  1 : "力は force の頭文字をとって \\(F\\) で表す。単位の \\(\\mathrm{N}\\)（ニュートン）と混同しないこと。",
+  2 : "質量 \\(m\\) の物体にはたらく重力の大きさは \\(mg\\) である。\\(g\\) は重力加速度で、地表付近では約 \\(9.8\\,\\mathrm{m/s^2}\\)。",
+  3 : "面が物体を垂直に押し返す力を垂直抗力といい \\(N\\) で表す。<strong>面から離れると 0 になる</strong>ので、常に \\(mg\\) と等しいとは限らない。",
+  4 : "摩擦力は \\(F\\) または \\(f\\) で表す。垂直抗力 \\(N\\) と直交する向き（面に平行）にはたらく。",
+  5 : "糸が引く力を張力といい \\(T\\)（tension）や \\(S\\) で表す。<strong>軽い糸では、糸の両端で張力の大きさは等しい</strong>。",
+  6 : "力の単位はニュートン \\(\\mathrm{N}\\)。\\(1\\,\\mathrm{N}\\) は質量 \\(1\\,\\mathrm{kg}\\) の物体に \\(1\\,\\mathrm{m/s^2}\\) の加速度を生じさせる力である。",
+  7 : "仕事は work の頭文字をとって \\(W\\) で表す。仕事率の単位 \\(\\mathrm{W}\\)（ワット）と紛らわしいので注意する。",
+  8 : "仕事の単位はジュール \\(\\mathrm{J}\\)。\\(1\\,\\mathrm{J}=1\\,\\mathrm{N}\\cdot\\mathrm{m}\\) であり、エネルギーと同じ単位である。",
+  9 : "仕事率は power の頭文字をとって \\(P\\) で表す。",
+  10 : "仕事率の単位はワット \\(\\mathrm{W}\\)。\\(1\\,\\mathrm{W}=1\\,\\mathrm{J/s}\\)、つまり 1 秒あたり \\(1\\,\\mathrm{J}\\) の仕事をする割合である。",
+  11 : "\\(W=Fx\\)。ただし<strong>力の向きに移動した距離</strong>で考えるため、力と移動の向きが角 \\(\\theta\\) をなす場合は \\(W=Fx\\cos\\theta\\) となる。",
+  12 : "\\(P=\\dfrac{W}{t}\\)。同じ仕事でも、短い時間でこなすほど仕事率は大きい。\\(W=Fx\\) を代入すると \\(P=Fv\\) とも書ける。",
+  13 : "力は大きさと向きをもつベクトルだが、<strong>どこにはたらくか（作用点）</strong>も指定して初めて決まる。作用点が違うと、同じ力でも物体の回転のしかたが変わる。",
+  14 : "ばねの力は伸び・縮みに<strong>比例</strong>する。\\(\\dfrac{1}{2}kx^2\\) は弾性力による位置エネルギーの式なので、混同しないこと。",
+  15 : "\\(F=kx\\) より \\(k=\\dfrac{F}{x}\\) なので \\(\\mathrm{N/m}\\)。「1 m 伸ばすのに何 N 必要か」を表す量である。",
+  16 : "重さは<strong>重力の大きさ</strong>（単位 \\(\\mathrm{N}\\)）であり、場所によって変わる。質量（単位 \\(\\mathrm{kg}\\)）は物体そのものの量で、月へ行っても変わらない。",
+  17 : "静止（または等速直線運動）では加速度が 0 なので、はたらく力の合力が 0、すなわち力のつりあいの式を立てる。",
+  18 : "加速度があるときは \\(ma=F\\)（運動方程式）を立てる。つりあいの式は、運動方程式で \\(a=0\\) とした特別な場合にあたる。",
+  19 : "滑り出す直前の傾角を<strong>摩擦角</strong>という。この角度を測るだけで静止摩擦係数が求められる。",
+  20 : "滑り出す直前は、斜面方向のつりあい \\(mg\\sin\\theta_0=\\mu N\\) と、垂直方向のつりあい \\(N=mg\\cos\\theta_0\\) が成り立つ。辺々割ると \\(mg\\) が消えて \\(\\mu=\\tan\\theta_0\\) が得られる。<strong>質量によらない</strong>のが特徴である。",
+  21 : "静止摩擦力は、加えた力とつりあうように<strong>大きさが変わる</strong>ため一つの式では表せない。\\(\\mu N\\) はその上限（最大静止摩擦力）を与える値である。",
+  22 : "最大静止摩擦力は \\(F=\\mu N\\)。押しつける力（垂直抗力）が大きいほど滑り出しにくくなる。",
+  23 : "動摩擦力は \\(f=\\mu' N\\) で、<strong>速さによらず一定</strong>である。滑っている間はつねにこの式が使える。",
+  24 : "動き出すときが一番大きな力を要し、動き出したあとは軽くなる。この経験どおり \\(\\mu'&lt;\\mu\\) である。重い家具を押すときの感覚がそのまま当てはまる。",
+  25 : "\\(\\mu=\\dfrac{F}{N}\\) と力どうしの比なので単位は消える。",
+  26 : "\\(W=Fx\\) なので、縦軸 \\(F\\)・横軸 \\(x\\) のグラフの<strong>面積</strong>が仕事を表す。力が変化する場合でも面積を求めれば仕事が得られる。",
+  27 : "物体1（軽いほう）は上向きに加速する。上向きを正としたので、上向きの張力 \\(T\\) から下向きの重力 \\(mg\\) を引いたものが合力になる。",
+  28 : "物体2（重いほう）は下向きに加速する。下向きを正としたので、下向きの重力 \\(Mg\\) から上向きの張力 \\(T\\) を引く。<strong>物体ごとに正の向きを別々に決めてよい</strong>のがこの解き方のポイント。",
+  29 : "2式を辺々足すと \\(T\\) が消え \\((M-m)g=(M+m)a\\)。よって \\(a=\\dfrac{M-m}{M+m}g\\)。\\(M=m\\) なら \\(a=0\\)、\\(m=0\\) なら \\(a=g\\) となり、極端な場合の予想とも合う。",
+  30 : "\\(a=\\dfrac{M-m}{M+m}g\\) を \\(T=m(g+a)\\) に代入すると \\(T=\\dfrac{2Mm}{M+m}g\\)。\\(M=m\\) のとき \\(T=mg\\) となり、静止してつりあう場合と一致する。",
+  31 : "水平方向にはたらくのは張力 \\(T\\) だけである。重力と垂直抗力は鉛直方向でつりあっており、水平方向の運動には効かない。",
+  32 : "物体2は下向きに加速するので、下向きを正として \\(Mg-T=Ma\\)。",
+  33 : "辺々足すと \\(Mg=(M+m)a\\)、よって \\(a=\\dfrac{M}{M+m}g\\)。<strong>「引く力 ÷ 動かす全質量」</strong>と読めば、2体を一体とみなした式そのものである。",
+  34 : "\\(T=ma\\) に \\(a=\\dfrac{M}{M+m}g\\) を代入して \\(T=\\dfrac{Mm}{M+m}g\\)。これは \\(Mg\\) より小さい。<strong>張力が \\(Mg\\) に等しくなるのは物体2が静止しているときだけ</strong>である。",
+  35 : "物体1の鉛直方向はつりあっているので \\(N=mg\\)。これを \\(f=\\mu' N\\) に代入して \\(f=\\mu' mg\\) となる。",
+  36 : "進む向きに張力 \\(T\\)、逆向きに動摩擦力 \\(\\mu' mg\\) がはたらく。<strong>摩擦力はつねに運動を妨げる向き</strong>なので引き算になる。",
+  37 : "物体2は下向きに加速するので、下向きを正として \\(Mg-T=Ma\\)。摩擦があってもこの式は変わらない。",
+  38 : "辺々足すと \\((M-\\mu' m)g=(M+m)a\\)。\\(\\mu'=0\\) とすると摩擦のない場合の \\(a=\\dfrac{M}{M+m}g\\) に戻ることを確かめておくとよい。",
+  39 : "\\(T=Mg-Ma\\) に \\(a\\) を代入して整理すると \\(T=\\dfrac{(1+\\mu')Mm}{M+m}g\\)。摩擦がある（\\(\\mu'>0\\)）ほど加速が鈍り、そのぶん張力は大きくなる。",
+  40 : "圧力は pressure の頭文字をとって \\(P\\) で表す。仕事率の \\(P\\) と記号が同じなので、文脈で区別する。",
+  41 : "圧力の単位はパスカル \\(\\mathrm{Pa}\\)。\\(1\\,\\mathrm{Pa}=1\\,\\mathrm{N/m^2}\\) である。",
+  42 : "接頭語 h（ヘクト）は \\(10^2\\) を表す。標準大気圧 \\(1013\\,\\mathrm{hPa}\\) は \\(101300\\,\\mathrm{Pa}\\)、およそ \\(10^5\\,\\mathrm{Pa}\\) にあたる。",
+  43 : "同じ力でも、面積が小さいほど圧力は大きくなる。画びょうの針先や包丁の刃が鋭いのはこのためである。",
+  44 : "\\(P=\\dfrac{F}{S}\\)。逆に「圧力 × 面積」で面にはたらく力が求まり、浮力や水圧の計算で使う。",
+  45 : "密度は \\(\\rho\\) で表し、\\(\\rho=\\dfrac{m}{V}\\)（質量 ÷ 体積）で定義される。単位は \\(\\mathrm{kg/m^3}\\)。",
+  46 : "真上にある液体の柱の重さを底面積で割ると \\(P=\\rho hg\\) が得られる。<strong>深さだけで決まり、容器の形や太さにはよらない</strong>。実際にはこれに大気圧を加える。",
+  47 : "\\(\\rho V\\) は押しのけた液体の質量なので、\\(\\rho Vg\\) はその重さにあたる。\\(\\rho\\) は<strong>液体の密度</strong>であって物体の密度ではない点に注意。",
+  48 : "アルキメデスの原理。浮力は、物体の上面と下面にはたらく圧力の差から生じている。",
+  49 : "浮力 \\(\\rho Vg\\) は<strong>体積だけで決まり、物体の材質や質量にはよらない</strong>。鉄球が沈むのは浮力が小さいからではなく、重力が浮力より大きいからである。",
+  50 : "水面には大気圧がかかっており、その圧力は水を通してそのまま深部へ伝わる。水中での圧力は「大気圧 ＋ 水圧」であり、大気圧がなくなるわけではない。",
+  51 : "水銀柱 \\(760\\,\\mathrm{mm}\\) 分の圧力が 1 気圧にあたる。水で同じことをすると約 \\(10\\,\\mathrm{m}\\) にもなるため、水銀が使われた。",
+  52 : "等しいのは<strong>重さ（力、単位 \\(\\mathrm{N}\\)）</strong>である。質量や体積では単位が合わない。",
+  53 : "空気抵抗は速さとともに大きくなり、やがて重力とつりあって加速しなくなる。このときの一定の速さを<strong>終端速度</strong>という。雨粒では数 m/s 程度である。",
+  54 : "下向きを正とすると、下向きの重力 \\(mg\\) から上向きの空気抵抗 \\(kv\\) を引く。速くなるほど抵抗が増えて \\(a\\) が小さくなり、\\(a=0\\) すなわち \\(v=\\dfrac{mg}{k}\\) が終端速度である。"
+};
+
+// ============================================================
+// 状態管理
+// ============================================================
+let curSec    = 1;
+let curMode   = 'study';   // 'intro' | 'study' | 'submit'
+let orderMode = 'seq';     // 自習モードの出題順　'seq'=学習順  'rand'=ランダム
+
+const im = {          // 初学モード状態
+  secId : null,
+  idx   : 0
+};
+
+const ss = {           // 自習モード状態
+  secId    : null,
+  qs       : [],
+  idx      : 0,
+  answered : false,
+  correct  : 0,
+  wrong    : 0,
+  chosen   : []
+};
+
+const sm = {           // 送信モード状態
+  secId   : null,
+  num     : '',
+  name    : '',
+  started : false,
+  idx     : 0,
+  answered: false,
+  answers : {},
+  chosen  : []
+};
+
+// ============================================================
+// ユーティリティ
+// ============================================================
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function imgTag(q) {
+  if (!q.image) return '';
+  const list = Array.isArray(q.image) ? q.image : [q.image];
+  const cls  = q.imgSize ? 'q-img ' + q.imgSize : 'q-img';
+  const tags = list.map(src => `<img class="${cls}" src="${src}" alt="図${q.id}">`).join('');
+  return list.length > 1 ? `<div class="q-imgs">${tags}</div>` : tags;
+}
+
+function doMath(el) {
+  if (window.renderMathInElement) {
+    renderMathInElement(el, {
+      delimiters: [
+        { left: '\\(', right: '\\)', display: false },
+        { left: '\\[', right: '\\]', display: true  }
+      ],
+      throwOnError: false
+    });
+  }
+}
+
+// ============================================================
+// タブ・モード
+// ============================================================
+function buildTabs() {
+  document.getElementById('tabs').innerHTML = SECTIONS.map(s => `
+    <div class="tab ${s.id === curSec ? 'active' : ''} ${!s.available ? 'disabled' : ''}"
+         onclick="${s.available ? `setSec(${s.id})` : ''}">
+      ${s.label}
+    </div>
+  `).join('');
+}
+
+function setSec(id) {
+  curSec      = id;
+  im.secId    = null;  // セクション変更→各モードの状態をリセット
+  ss.secId    = null;
+  sm.started  = false;
+  buildTabs();
+  render();
+}
+
+function setMode(mode) {
+  curMode = mode;
+  document.getElementById('modeIntro' ).classList.toggle('active', mode === 'intro' );
+  document.getElementById('modeStudy' ).classList.toggle('active', mode === 'study' );
+  document.getElementById('modeSubmit').classList.toggle('active', mode === 'submit');
+  render();
+}
+
+// ============================================================
+// メインレンダー
+// ============================================================
+function render() {
+  const sec = SECTIONS.find(s => s.id === curSec);
+  document.getElementById('hdrSub').textContent = sec.subtitle || '';
+
+  if (!sec.available) {
+    document.getElementById('content').innerHTML = `
+      <div class="coming-card">
+        <div class="coming-icon">🔧</div>
+        <div class="coming-title">準備中</div>
+        <div class="coming-text">${sec.label} は現在準備中です。</div>
+      </div>`;
+    return;
+  }
+
+  if      (curMode === 'intro')  renderIntro(sec);
+  else if (curMode === 'study')  renderStudy(sec);
+  else                            renderSubmit(sec);
+}
+
+// ============================================================
+// 初学モード：選択肢なし、解答・解説をはじめから表示
+// ============================================================
+function renderIntro(sec) {
+  if (im.secId !== sec.id) {
+    im.secId = sec.id;
+    im.idx   = 0;
+  }
+  if (im.idx >= sec.questions.length) {
+    renderIntroDone(sec);
+    return;
+  }
+
+  const q     = sec.questions[im.idx];
+  const total = sec.questions.length;
+  const pct   = Math.round((im.idx / total) * 100);
+  const expl  = EXPLANATIONS[q.id] || '';
+
+  const el = document.getElementById('content');
+  el.innerHTML = `
+    <div class="prog-row">
+      <div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>
+      <div class="prog-text">${im.idx + 1} / ${total}</div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">問 ${q.id}</div>
+      ${imgTag(q)}
+      <div class="q-text">${q.text}</div>
+    </div>
+
+    <div class="intro-answer">
+      <div class="intro-answer-label">✅ 解答</div>
+      <div class="intro-answer-text">${q.choices[0]}</div>
+      <div class="intro-expl"><span class="intro-expl-icon">💡</span>${expl}</div>
+    </div>
+
+    <button class="next-btn" onclick="nextIntroQ()">
+      ${im.idx + 1 < total ? '次の問題 →' : '✅ セクション修了 →'}
+    </button>
+  `;
+
+  doMath(el);
+}
+
+function nextIntroQ() {
+  im.idx++;
+  renderIntro(SECTIONS.find(s => s.id === curSec));
+}
+
+function renderIntroDone(sec) {
+  document.getElementById('content').innerHTML = `
+    <div class="done-card">
+      <div class="done-icon">🎓</div>
+      <div class="done-title">${sec.label}（${sec.subtitle}）の学習が終わりました</div>
+      <div class="done-sub">全 ${sec.questions.length} 問を確認しました。次は自習モードで理解度を確かめましょう。</div>
+      <div class="done-actions">
+        <button class="next-btn" onclick="restartIntro()">🔄 もう一度読み直す</button>
+        <button class="next-btn" style="background:#059669;" onclick="setMode('study')">📖 自習モードへ進む</button>
+      </div>
+    </div>`;
+}
+
+function restartIntro() {
+  im.idx = 0;
+  renderIntro(SECTIONS.find(s => s.id === curSec));
+}
+
+// ============================================================
+// 自習モード（4択・即時採点）
+// ============================================================
+function setOrderMode(mode) {
+  orderMode   = mode;
+  ss.secId    = null; // 切替時に出題をリセット
+  ss.chosen   = [];
+  render();
+}
+
+function startStudy(sec) {
+  ss.secId    = sec.id;
+  ss.qs       = orderMode === 'rand'
+                  ? shuffle(sec.questions)
+                  : [...sec.questions]; // 学習順：問1から順番
+  ss.idx      = 0;
+  ss.answered = false;
+  ss.correct  = 0;
+  ss.wrong    = 0;
+  ss.chosen   = [];
+  renderStudy(sec);
+}
+
+function renderStudy(sec) {
+  if (ss.secId !== sec.id || ss.qs.length === 0) {
+    startStudy(sec);
+    return;
+  }
+  if (ss.idx >= ss.qs.length) {
+    renderResult(sec);
+    return;
+  }
+
+  const q     = ss.qs[ss.idx];
+  const total = ss.qs.length;
+  const pct   = Math.round((ss.idx / total) * 100);
+
+  if (ss.chosen.length === 0) {
+    ss.chosen = shuffle(q.choices.map((_, i) => i));
+  }
+
+  const el = document.getElementById('content');
+  el.innerHTML = `
+    <div class="order-row">
+      <span class="order-label">出題順：</span>
+      <button class="order-btn ${orderMode === 'seq'  ? 'active' : ''}"
+              onclick="setOrderMode('seq')">学習順</button>
+      <button class="order-btn ${orderMode === 'rand' ? 'active' : ''}"
+              onclick="setOrderMode('rand')">ランダム</button>
+    </div>
+    <div class="prog-row">
+      <div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>
+      <div class="prog-text">${ss.idx + 1} / ${total}</div>
+    </div>
+    <div class="score-row" id="scoreRow">✅ ${ss.correct} &nbsp;❌ ${ss.wrong}</div>
+
+    <div class="q-card">
+      <div class="q-num">問 ${q.id}</div>
+      ${imgTag(q)}
+      <div class="q-text">${q.text}</div>
+    </div>
+
+    <div class="choices" id="clist">
+      ${ss.chosen.map((ci, pos) => `
+        <button class="choice-btn" id="cb${pos}" onclick="pick(${pos})"
+                ${ss.answered ? 'disabled' : ''}>
+          ${q.choices[ci]}
+        </button>`).join('')}
+    </div>
+
+    <div class="feedback" id="fb"></div>
+
+    <button class="next-btn" id="nb" onclick="nextQ()" style="display:none;">
+      ${ss.idx + 1 < total ? '次の問題 →' : '結果を見る →'}
+    </button>
+  `;
+
+  doMath(el);
+}
+
+function pick(pos) {
+  if (ss.answered) return;
+  ss.answered = true;
+
+  const q         = ss.qs[ss.idx];
+  const isCorrect = ss.chosen[pos] === 0;
+
+  if (isCorrect) ss.correct++;
+  else           ss.wrong++;
+
+  ss.chosen.forEach((ci, p) => {
+    const btn = document.getElementById(`cb${p}`);
+    if (!btn) return;
+    btn.disabled = true;
+    if (ci === 0)       btn.classList.add('correct');
+    else if (p === pos) btn.classList.add('wrong');
+  });
+
+  const fb   = document.getElementById('fb');
+  const expl = EXPLANATIONS[q.id] || '';
+  if (isCorrect) {
+    fb.className = 'feedback ok';
+    fb.innerHTML = `✅ 正解です！${expl ? `<br><span class="fb-expl">💡 ${expl}</span>` : ''}`;
+  } else {
+    fb.className = 'feedback ng';
+    fb.innerHTML = `❌ 不正解。正解は「${q.choices[0]}」です。${expl ? `<br><span class="fb-expl">💡 ${expl}</span>` : ''}`;
+  }
+  doMath(fb);
+
+  document.getElementById('scoreRow').innerHTML = `✅ ${ss.correct} &nbsp;❌ ${ss.wrong}`;
+  document.getElementById('nb').style.display = 'block';
+}
+
+function nextQ() {
+  ss.idx++;
+  ss.answered = false;
+  ss.chosen   = [];
+  renderStudy(SECTIONS.find(s => s.id === curSec));
+}
+
+function renderResult(sec) {
+  const total = ss.qs.length;
+  const c     = ss.correct;
+  const pct   = Math.round((c / total) * 100);
+  const emoji = pct >= 90 ? '🎉' : pct >= 70 ? '👍' : pct >= 50 ? '🤔' : '😢';
+
+  document.getElementById('content').innerHTML = `
+    <div class="result-card">
+      <div class="result-emoji">${emoji}</div>
+      <div class="result-score">${c}</div>
+      <div class="result-total">/ ${total} 問正解</div>
+      <div class="result-pct">正答率 ${pct}%</div>
+      <div class="result-actions">
+        <button class="retry-btn"
+                onclick="startStudy(SECTIONS.find(s=>s.id===${curSec}))">
+          🔄 もう一度やり直す
+        </button>
+      </div>
+    </div>`;
+}
+
+// ============================================================
+// 送信モード
+// ============================================================
+function renderSubmit(sec) {
+  if (sm.secId !== sec.id || !sm.started) {
+    renderSubmitIntro(sec);
+    return;
+  }
+  if (sm.idx >= sec.questions.length) {
+    renderSubmitFinal(sec);
+    return;
+  }
+  renderSubmitQuestion(sec);
+}
+
+/* ── 氏名入力画面 ── */
+function renderSubmitIntro(sec) {
+  document.getElementById('content').innerHTML = `
+    <div class="name-card">
+      <label class="name-label" for="snum">組番号を入力してください</label>
+      <input type="text" class="name-input" id="snum"
+             placeholder="例：A01～E40"
+             value="${sm.secId === sec.id ? sm.num : ''}">
+    </div>
+    <div class="name-card">
+      <label class="name-label" for="sname">氏名を入力してください</label>
+      <input type="text" class="name-input" id="sname"
+             placeholder="例：湘南 太郎"
+             value="${sm.secId === sec.id ? sm.name : ''}">
+    </div>
+    <button class="sm-start-btn" onclick="startSubmitQuiz(${sec.id})">
+      ✏️ 回答を開始する（全 ${sec.questions.length} 問）
+    </button>`;
+}
+
+function startSubmitQuiz(secId) {
+  const num  = document.getElementById('snum').value.trim();
+  const name = document.getElementById('sname').value.trim();
+  if (!num)  { alert('組番号を入力してください。'); return; }
+  if (!name) { alert('氏名を入力してください。');   return; }
+  sm.secId    = secId;
+  sm.num      = num;
+  sm.name     = name;
+  sm.started  = true;
+  sm.startedAt = Date.now();   // 所要時間の計測用
+  sm.idx      = 0;
+  sm.answered = false;
+  sm.answers  = {};
+  sm.chosen   = [];
+  renderSubmit(SECTIONS.find(s => s.id === secId));
+}
+
+/* ── 一問表示 ── */
+function renderSubmitQuestion(sec) {
+  const q     = sec.questions[sm.idx];
+  const total = sec.questions.length;
+  const pct   = Math.round((sm.idx / total) * 100);
+
+  if (sm.chosen.length === 0) {
+    sm.chosen = shuffle(q.choices.map((_, i) => i));
+  }
+
+  const expl       = EXPLANATIONS[q.id] || '';
+  const selectedCi = sm.answers[q.id];
+
+  const el = document.getElementById('content');
+  el.innerHTML = `
+    <div class="prog-row">
+      <div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>
+      <div class="prog-text">${sm.idx + 1} / ${total}</div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">問 ${q.id}</div>
+      ${imgTag(q)}
+      <div class="q-text">${q.text}</div>
+    </div>
+
+    <div class="choices">
+      ${sm.chosen.map((ci, pos) => {
+        let cls = '';
+        if (sm.answered) {
+          if (ci === 0)                           cls = 'correct';
+          else if (ci === selectedCi && ci !== 0) cls = 'wrong';
+        }
+        return `
+          <button class="choice-btn ${cls}" id="smcb${pos}"
+                  onclick="pickSubmit(${pos})"
+                  ${sm.answered ? 'disabled' : ''}>
+            ${q.choices[ci]}
+          </button>`;
+      }).join('')}
+    </div>
+
+    ${sm.answered ? `
+      <div class="sm-explanation">
+        <span class="sm-expl-icon">💡</span>
+        <span>${expl}</span>
+      </div>
+      <button class="next-btn" onclick="nextSubmitQ()">
+        ${sm.idx + 1 < total ? '次の問題 →' : '✅ 送信画面へ →'}
+      </button>
+    ` : ''}
+  `;
+
+  doMath(el);
+}
+
+function pickSubmit(pos) {
+  if (sm.answered) return;
+  sm.answered = true;
+  const sec = SECTIONS.find(s => s.id === sm.secId);
+  const q   = sec.questions[sm.idx];
+  sm.answers[q.id] = sm.chosen[pos];
+  renderSubmitQuestion(sec);
+}
+
+function nextSubmitQ() {
+  sm.idx++;
+  sm.answered = false;
+  sm.chosen   = [];
+  renderSubmit(SECTIONS.find(s => s.id === sm.secId));
+}
+
+/* ── 送信確認画面 ── */
+function renderSubmitFinal(sec) {
+  document.getElementById('content').innerHTML = `
+    <div class="sm-final-card">
+      <div class="sm-final-icon">📝</div>
+      <div class="sm-final-title">全 ${sec.questions.length} 問の回答が完了しました</div>
+      <div class="sm-final-name">${sm.name} さん</div>
+      <button class="submit-btn" id="sbtn" onclick="doSubmit(${sec.id})">
+        📤 回答を送信する
+      </button>
+      <div id="sresult"></div>
+    </div>`;
+}
+
+// ============================================================
+//  記録送信（学習記録ハブ  スキーマ v1）
+// ============================================================
+// ハブGASのデプロイURL
+const HUB_URL = 'https://script.google.com/macros/s/AKfycbwnV8z1aoFsLF0NEEgFXZEVktKKNVqm8Fnvrm4Z772M1df-VZKJRAljAZBHgRkInIVX/exec';
+
+// 単元マスタ.xlsx「アプリ設定」シートの dynamics の行から転記
+const APP_ID  = 'dynamics';
+const UNIT_ID = 'MEC02';
+// ★配列の並びはタブ（運動の3法則と摩擦力・2体の運動・圧力と浮力）と一致させること
+const SEC_IDS = ['MEC02-S1', 'MEC02-S2', 'MEC02-S3'];
+
+// 移行期のみ true。旧スプレッドシートにも同じ内容を送る。
+// ハブ側で記録できていることを確認したら false にする。
+const SEND_LEGACY = false;   // 新規アプリなので旧送信先なし
+const GAS_URL = '';
+
+let _sub = null;   // 直前の送信内容（結果表示用）
+
+/* このアプリは sm.answers[問題ID] に「選んだ選択肢の元index」を持ち、0 が正解 */
+function isCorrect_(qid) { return sm.answers[qid] === 0; }
+
+function doSubmit(secId) {
+  const sec     = SECTIONS.find(s => s.id === secId);
+  const qids    = sec.questions.map(q => q.id);
+  const correct = qids.filter(isCorrect_).length;
+  const elapsed = sm.startedAt ? Math.round((Date.now() - sm.startedAt) / 1000) : 0;
+
+  _sub = { num: sm.num, name: sm.name, correct, total: qids.length };
+
+  if (!HUB_URL && !(SEND_LEGACY && GAS_URL)) {
+    document.getElementById('sresult').innerHTML = `
+      <div class="sub-result warn">
+        ⚠️ 送信先が未設定です。<br>
+        <strong>${sm.num}　${sm.name}</strong> さんの得点：<strong>${correct} / ${_sub.total}</strong>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px;">
+        <button class="next-btn" onclick="setMode('study')">📖 自習モードで学習する</button>
+      </div>`;
+    return;
+  }
+
+  const btn = document.getElementById('sbtn');
+  if (btn) { btn.disabled = true; btn.textContent = '📤 送信中…'; }
+
+  sendRecord(sec, qids, correct, elapsed).then(ok => showSubmitResult(ok, btn));
+}
+
+/* ── ハブ（＋移行期は旧GAS）へ送信 ── */
+async function sendRecord(sec, qids, correct, elapsed) {
+  const marks = qids.map(id => (isCorrect_(id) ? '1' : '0')).join('');
+  let ok = null;
+
+  if (HUB_URL) {
+    const secId = SEC_IDS[sec.id - 1];
+    if (!secId) {
+      console.error('SEC_IDS に ' + sec.label + ' の定義がありません');
+    } else {
+      const p = new URLSearchParams();
+      p.set('v',       '1');
+      p.set('app',     APP_ID);
+      p.set('unit',    UNIT_ID);
+      p.set('sec',     secId);          // ★恒久ID。単元マスタとの結合キー
+      p.set('section', sec.label);      // 保険（マスタ側の名前が優先される）
+      p.set('cls',     sm.num);         // 組番号 → 名簿で生徒IDに解決される
+      p.set('name',    sm.name);
+      p.set('mode',    '送信');
+      p.set('qids',    qids.join(','));
+      p.set('marks',   marks);          // 例 "1011…"（○×より遥かに短い）
+      p.set('elapsed', String(elapsed));
+      p.set('comment', '');
+      ok = await beacon(HUB_URL + '?' + p.toString());
+    }
+  }
+
+  if (SEND_LEGACY && GAS_URL) {
+    const q = new URLSearchParams({
+      num      : sm.num,
+      name     : sm.name,
+      section  : sec.label,
+      correct  : String(correct),
+      total    : String(qids.length),
+      qids     : qids.join(','),
+      timestamp: new Date().toLocaleString('ja-JP')
+    });
+    qids.forEach(id => q.append('q' + id, isCorrect_(id) ? '○' : '×'));
+    const ok2 = await beacon(GAS_URL + '?' + q.toString());
+    if (ok === null) ok = ok2;
+  }
+
+  return ok === true;
+}
+
+/* ── 画像ビーコン方式（CSP・CORSの影響を受けにくい）／最大3回試行 ── */
+function beacon(url) {
+  const MAX_RETRY = 3;
+  return (async () => {
+    for (let i = 0; i < MAX_RETRY; i++) {
+      const btn = document.getElementById('sbtn');
+      if (btn && i > 0) btn.textContent = `🔄 再送信中… (${i + 1}/${MAX_RETRY})`;
+      const reached = await new Promise(resolve => {
+        const img   = new Image();
+        const timer = setTimeout(() => resolve(false), 6000);
+        img.onload  = () => { clearTimeout(timer); resolve(true); };
+        img.onerror = () => { clearTimeout(timer); resolve(true); };  // 到達はしている
+        img.src = url;
+      });
+      if (reached) return true;
+      await new Promise(r => setTimeout(r, 1500));
+    }
+    return false;
+  })();
+}
+
+/* ── 結果表示 ── */
+function showSubmitResult(ok, btn) {
+  const { num, name, correct, total } = _sub;
+  const el = document.getElementById('sresult');
+  if (!el) return;
+
+  if (ok) {
+    el.innerHTML = `
+      <div class="sub-result ok">
+        ✅ 送信完了しました。お疲れ様でした！<br>
+        <strong>${num}　${name}</strong> さんの得点：<strong>${correct} / ${total}</strong>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px;">
+        <button class="next-btn" onclick="setMode('study')">📖 自習モードで学習する</button>
+        <button class="next-btn" style="background:#059669;"
+                onclick="sm.started=false; setMode('submit')">📤 送信モードでもう一度</button>
+      </div>`;
+  } else {
+    el.innerHTML = `
+      <div class="sub-result warn">
+        ❌ 送信に失敗しました。ネットワークを確認してもう一度お試しください。<br>
+        <strong>${num}　${name}</strong> さんの得点：<strong>${correct} / ${total}</strong>
+      </div>`;
+    if (btn) { btn.disabled = false; btn.textContent = '📤 もう一度送信する'; }
+  }
+}
+
+// ============================================================
+// 初期化
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  buildTabs();
+  document.getElementById('modeStudy').classList.add('active');
+  render();
+});
+</script>
+</body>
+</html>
